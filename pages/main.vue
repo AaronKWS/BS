@@ -1,95 +1,127 @@
 <template>
-  <div class="main-page">
-    <div class="main-content">
-        <component :is="currentTabComponent"></component>
-    </div>
-    <div class="main-menu">
-        <div class="menu-left" :class="{ active: isActive }" @click="goList">
-            <span class="iconfont font-style">&#xe600;</span>
-            <div class="bottom-font">购物</div>
-        </div>
-        <div class="menu-right" :class="{ activetwo: isActiveTwo }" @click="goUser">
-            <span class="iconfont font-style">&#xe608;</span>
-            <div class="bottom-font">个人中心</div>
-        </div>
-    </div>
+  <div class="container">
+    <el-row class="top">
+      <img src="@/assets/img/icon.svg" alt="头像" class="image" />
+    </el-row>
+    <el-row class="middle">
+      <div class="box">
+        <el-input placeholder="请输入内容" v-model="name" clearable class="innerBox"></el-input>
+        <el-input placeholder="请输入密码" v-model="password" show-password></el-input>
+      </div>
+    </el-row>
+    <el-row class="bottom">
+      <el-button type="primary" class="btn" @click="login">登陆</el-button>
+    </el-row>
+    <div v-show="show" class="warn">{{result}}</div>
   </div>
 </template>
 
 <script>
-import ListPage from '@/components/list/list';
-import UserPage from '@/components/user/user';
+import { mapMutations } from 'vuex'
 export default {
-    components: {
-        ListPage,
-        UserPage
-    },
-    data() {
-        return {
-            currentTabComponent: 'list-page',
-            isActive: true,
-            isActiveTwo: false
-        }
-    },
-    methods: {
-        goList: function() {
-            this.currentTabComponent = 'list-page';
-            this.isActive = true;
-            this.isActiveTwo = false;
-        },
-        goUser: function() {
-            this.currentTabComponent = 'user-page';
-            this.isActive = false;
-            this.isActiveTwo = true;
-        }
+  layout: 'login',
+  data: () => {
+    return {
+      name: '',
+      password: '',
+      show: false,
+      result: ''
     }
+  },
+  watch: {
+    show: function(val) {
+      if (val) {
+        let self = this
+        setTimeout(function() {
+          self.show = false
+        }, 2000)
+      }
+    }
+  },
+  methods: {
+    login: function() {
+      if (this.name === '' || this.password === '') {
+        this.result = '请输入用户名密码！'
+        this.show = true
+      } else {
+        let self = this
+        self.$axios
+          .post('/login', {
+            name: self.name,
+            password: self.password
+          })
+          .then((data) => {
+            data = data.data;
+            if (data.status === '200') {
+              let reu = data.result[0]
+              self.setUser(reu);
+              self.$router.push('/')
+            } else {
+              console.log(data.result)
+              self.result = data.result
+              self.show = true
+            }
+          })
+      }
+    },
+    ...mapMutations(['setUser'])
+  }
 }
 </script>
 
 <style>
-@import '../assets/css/iconfont.css';
-body,html {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-}
-.main-page {
-    width: 100%;
-    height: 100%;
-}
-.main-menu {
-    z-index: 999;
-    position: fixed;
-    display: flex;
-    bottom: 0;
-    width: 100%;
-    height: 4.5rem;
-    background: #f5f5f5;
+body,
+html {
+  margin: 0;
 }
 
-.menu-left, .menu-right {
-    flex: 1;
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
-.menu-left, .menu-right {
-    padding-top: .4rem; 
-    text-align: center;
-    color: #888;
+.top {
+  margin-top: 5rem;
 }
 
-.font-style {
-    font-size: 2rem;
+.middle {
+  margin-top: 2.5rem;
 }
-.active {
-    color: blue;
-    transform: scale(1.3);
+.bottom {
+  margin-top: 2.5rem;
 }
-.activetwo {
-    color: blue;
-    transform: scale(1.3);
+
+.image {
+  width: 10rem;
+  height: 10rem;
+  border-radius: 50%;
 }
-.bottom-font {
-    font-size: .7rem;
-    font-weight: 400;
+.innerBox {
+  margin-bottom: 0.9rem;
+}
+
+.box {
+  width: 21rem;
+}
+.btn {
+  margin-top: 1rem;
+  width: 20rem;
+}
+.warn {
+  z-index: 999;
+  position: fixed;
+  bottom: 0;
+  height: 2.5rem;
+  width: 100%;
+  text-align: center;
+  line-height: 2.5rem;
+  font-size: 0.9rem;
+  background-color: rgba(255, 0, 0, 0.6);
 }
 </style>

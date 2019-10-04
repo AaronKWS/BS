@@ -1,14 +1,17 @@
 <template>
   <div class="user-container">
-    <div class="user-info">
+    <div class="user-info" v-if="show">
       <div class="user-name">
         <p class="user-top">用户:</p>
-        <p class="user-down">李青</p>
+        <p class="user-down">{{users.username}}</p>
       </div>
       <div class="yu-e">
         <p class="user-top">余额:</p>
-        <p class="user-down">68.9 ￥</p>
+        <p class="user-down">￥{{users.balance}}</p>
       </div>
+    </div>
+    <div class="err-login" v-else>
+      <nuxt-link to="/main">请登陆</nuxt-link>
     </div>
     <div class="user-list">
         <ul>
@@ -23,17 +26,38 @@
                 <i class="el-icon-arrow-right right-icon"></i>
             </li>
         </ul>
-        <el-button type="danger" class="exit-btn">退出</el-button>
+        <el-button type="danger" class="exit-btn" @click="exitApp">退出</el-button>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState,mapMutations } from 'vuex';
 export default {
+  data() {
+    return {
+      show: false
+    }
+  },
+  created() {
+    if(this.users === null) {
+      this.show = false;
+    }else {
+      this.show = true;
+    }
+  },
   methods: {
     goUserOrder: function() {
       this.$emit('goUserPage','order');
-    }
+    },
+    exitApp: function() {
+      this.exitUser();
+      this.show = false;
+    },
+    ...mapMutations(['exitUser'])
+  },
+  computed: {
+    ...mapState(['users'])
   }
 }
 </script>
@@ -44,14 +68,30 @@ p {
 }
 .user-container {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   height: 37.9rem;
-  padding-top: .6rem;
+  padding-top: .5rem;
+}
+a {
+  text-decoration: none;
 }
 .user-info {
   height: 17.9rem;
   width: 22rem;
-  margin-left: 50%;
-  transform: translateX(-50%);
+  background-color: rgb(24, 144, 255);
+  border-radius: 0.9rem;
+  box-shadow: 0.2rem 0.3rem 0.4rem #999;
+}
+
+.err-login {
+  height: 17.9rem;
+  line-height: 17.9rem;
+  text-align: center;
+  width: 22rem;
+  font-size: 3rem;
   background-color: rgb(24, 144, 255);
   border-radius: 0.9rem;
   box-shadow: 0.2rem 0.3rem 0.4rem #999;
@@ -77,7 +117,14 @@ p {
   font-size: 2rem;
 }
 .user-list {
-    margin-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 3rem;
+}
+.user-list>ul {
+  width: 100%;
 }
 .li-user-item {
     position: relative;
@@ -87,8 +134,6 @@ p {
     background-color: #f5f5f5;
 }
 .exit-btn {
-  margin-left: 50%;
-  transform: translateX(-50%);
   margin-top: 2rem;
   width: 22rem;
 }

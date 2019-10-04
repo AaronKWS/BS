@@ -3,68 +3,58 @@
     <div class="child-header">
       <span class="iconfont icon-style" @click="goMenu">&#xe617;</span><p class="head-title">饮品</p>
     </div>
-    <div class="drink-list" ref="wrapper">
+    <div class="drink-list" ref="wrapper" v-if="show === 1">
       <ul>
-        <li class="li-drink-item">
-          <img src="@/assets/img/1.jpg" class="food-image" />
-          <div class="food-name">果汁</div>
-          <div class="food-price">20.4￥</div>
-        </li>
-        <li class="li-drink-item">
-          <img src="@/assets/img/1.jpg" class="food-image" />
-          <div class="food-name">果汁</div>
-          <div class="food-price">20.4￥</div>
-        </li>
-        <li class="li-drink-item">
-          <img src="@/assets/img/1.jpg" class="food-image" />
-          <div class="food-name">果汁</div>
-          <div class="food-price">20.4￥</div>
-        </li>
-        <li class="li-drink-item">
-          <img src="@/assets/img/1.jpg" class="food-image" />
-          <div class="food-name">果汁</div>
-          <div class="food-price">20.4￥</div>
-        </li>
-        <li class="li-drink-item">
-          <img src="@/assets/img/1.jpg" class="food-image" />
-          <div class="food-name">果汁</div>
-          <div class="food-price">20.4￥</div>
-        </li>
-        <li class="li-drink-item">
-          <img src="@/assets/img/1.jpg" class="food-image" />
-          <div class="food-name">果汁</div>
-          <div class="food-price">20.4￥</div>
-        </li>
-        <li class="li-drink-item">
-          <img src="@/assets/img/1.jpg" class="food-image" />
-          <div class="food-name">果汁</div>
-          <div class="food-price">20.4￥</div>
-        </li>
-        <li class="li-drink-item">
-          <img src="@/assets/img/1.jpg" class="food-image" />
-          <div class="food-name">果汁</div>
-          <div class="food-price">20.4￥</div>
-        </li>
-        <li class="li-drink-item">
-          <img src="@/assets/img/1.jpg" class="food-image" />
-          <div class="food-name">果汁</div>
-          <div class="food-price">20.4￥</div>
+        <li class="li-drink-item" v-for="(item, index) of list" :key="index">
+          <img :src="item.img" class="food-image" />
+          <div class="food-name">{{item.name}}</div>
+          <div class="food-price">￥{{item.price}}</div>
         </li>
       </ul>
     </div>
+    <div class="no-login" v-else-if="show === 2">暂无任何可显示数据！</div>
+    <div class="no-login" v-else-if="show === 3">用户未登录，请先登陆！</div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import Bscroll from 'better-scroll'
 export default {
+  data() {
+    return {
+      list: [],
+      show: 3
+    }
+  },
+  computed: {
+    ...mapState(['users'])
+  },
   methods: {
     goMenu: function() {
       this.$emit('goPage', 'father')
     }
   },
+  created() {
+    if(this.users === null) {
+      this.show = 3;
+    }else {
+      this.$axios.get('/drink')
+      .then(data => {
+        data = data.data;
+        this.list = data.result;
+        if(this.list.length === 0) {
+          this.show = 2
+        }else {
+          this.show = 1
+        }
+      })
+    }
+  },
   mounted() {
-    this.scroll = new Bscroll(this.$refs.wrapper)
+    if (this.show === 1) {
+      this.scroll = new Bscroll(this.$refs.wrapper)
+    }
   }
 }
 </script>
