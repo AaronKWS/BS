@@ -14,25 +14,25 @@
       <nuxt-link to="/main">请登陆</nuxt-link>
     </div>
     <div class="user-list">
-        <ul>
-            <li class="li-user-item" @click="goUserOrder">
-                <i class="el-icon-s-order left-icon"></i>
-                <div class="middle-text">交易明细</div>
-                <i class="el-icon-arrow-right right-icon"></i>
-            </li>
-            <li class="li-user-item">
-                <i class="el-icon-s-help left-icon" style="color:green"></i>
-                <div class="middle-text">关于我们</div>
-                <i class="el-icon-arrow-right right-icon"></i>
-            </li>
-        </ul>
-        <el-button type="danger" class="exit-btn" @click="exitApp">退出</el-button>
+      <ul>
+        <li class="li-user-item" @click="goUserOrder">
+          <i class="el-icon-s-order left-icon"></i>
+          <div class="middle-text">交易明细</div>
+          <i class="el-icon-arrow-right right-icon"></i>
+        </li>
+        <li class="li-user-item">
+          <i class="el-icon-s-help left-icon" style="color:green"></i>
+          <div class="middle-text">关于我们</div>
+          <i class="el-icon-arrow-right right-icon"></i>
+        </li>
+      </ul>
+      <el-button type="danger" class="exit-btn" @click="exitApp">退出</el-button>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState,mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex'
 export default {
   data() {
     return {
@@ -40,21 +40,34 @@ export default {
     }
   },
   created() {
-    if(this.users === null) {
-      this.show = false;
-    }else {
-      this.show = true;
+    let self = this
+    if (this.users === null) {
+      this.show = false
+    } else {
+      this.show = true
+      window.setInterval(function() {
+        self.$axios
+          .post('/login', {
+            name: self.users.username,
+            password: self.users.pwd
+          })
+          .then(data => {
+            data = data.data
+            let reu = data.result[0]
+            self.setUser(reu)
+          })
+      }, 1000)
     }
   },
   methods: {
     goUserOrder: function() {
-      this.$emit('goUserPage','order');
+      this.$emit('goUserPage', 'order')
     },
     exitApp: function() {
-      this.exitUser();
-      this.show = false;
+      this.exitUser()
+      this.show = false
     },
-    ...mapMutations(['exitUser'])
+    ...mapMutations(['setUser', 'exitUser'])
   },
   computed: {
     ...mapState(['users'])
@@ -73,7 +86,7 @@ p {
   align-items: center;
   justify-content: center;
   height: 37.9rem;
-  padding-top: .5rem;
+  padding-top: 0.5rem;
 }
 a {
   text-decoration: none;
@@ -123,15 +136,15 @@ a {
   align-items: center;
   margin-top: 3rem;
 }
-.user-list>ul {
+.user-list > ul {
   width: 100%;
 }
 .li-user-item {
-    position: relative;
-    display: flex;
-    height: 3.7rem;
-    border-bottom: 2px solid white;
-    background-color: #f5f5f5;
+  position: relative;
+  display: flex;
+  height: 3.7rem;
+  border-bottom: 2px solid white;
+  background-color: #f5f5f5;
 }
 .exit-btn {
   margin-top: 2rem;
@@ -139,22 +152,22 @@ a {
 }
 
 .left-icon {
-    font-size: 2rem;
-    line-height: 3.7rem;
-    margin-left: .7rem;
-    color: yellow;
+  font-size: 2rem;
+  line-height: 3.7rem;
+  margin-left: 0.7rem;
+  color: yellow;
 }
 
 .middle-text {
-    margin-left: 1rem;
-    line-height: 3.7rem;
-    font-size: 1.15rem;
-    color: #666;
+  margin-left: 1rem;
+  line-height: 3.7rem;
+  font-size: 1.15rem;
+  color: #666;
 }
 .right-icon {
-    position: absolute;
-    font-size: 2rem;
-    line-height: 3.7rem;
-    right: .9rem;;
+  position: absolute;
+  font-size: 2rem;
+  line-height: 3.7rem;
+  right: 0.9rem;
 }
 </style>
