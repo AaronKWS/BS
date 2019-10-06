@@ -113,8 +113,9 @@ ul {
   font-size: 1.5rem;
 }
 .food-price {
+  position: absolute;
   height: 5rem;
-  margin-left: 7rem;
+  right: 2rem;
   line-height: 5rem;
   font-size: 1.5rem;
 }
