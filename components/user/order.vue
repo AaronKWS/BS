@@ -14,7 +14,7 @@
             </dt>
             <dd class="order-list-middle">
               <p class="order-list-middle-top">总消费金额</p>
-              <p class="order-list-middle-bottom">￥{{item.price*item.computertime+item.other}}</p>
+              <p class="order-list-middle-bottom">￥{{item.total}}</p>
             </dd>
             <dd class="order-list-bottom">
               <div class="order-list-bottom-item">
