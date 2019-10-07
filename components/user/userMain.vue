@@ -56,7 +56,7 @@ export default {
             let reu = data.result[0]
             self.setUser(reu)
           })
-      }, 1000)
+      }, 4000)
     }
   },
   methods: {
