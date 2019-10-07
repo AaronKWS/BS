@@ -1,4 +1,4 @@
-# app
+# 客户端
 
 > My beautiful Nuxt.js project
 
