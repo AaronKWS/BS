@@ -9,6 +9,7 @@ export const mutations = {
         state.users = user;
     },
     exitUser: function(state) {
+        console.log('加入')
         state.users = null;
     }
 }

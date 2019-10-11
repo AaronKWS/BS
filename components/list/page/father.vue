@@ -5,11 +5,11 @@
     </div>
     <div class="menu-list" ref="wrapper">
         <div class="item" @click="goFood">
-          <img src="@/assets/img/1.jpg" class="food-image" />
+          <img src="@/assets/img/mb.png" class="food-image" />
           <span>食物</span>
         </div>
         <div class="item" @click="goDrink">
-          <img src="@/assets/img/1.jpg" class="food-image" />
+          <img src="@/assets/img/yl.png" class="food-image" />
           <span>饮品</span>
         </div>
     </div>
@@ -71,10 +71,10 @@ export default {
   background-color: #f5f5f5;
 }
 .food-image {
-  width: 4.6rem;
-  height: 4.6rem;
+  width: 3.5rem;
+  height: 3.5rem;
   margin-left: 0.5rem;
-  margin-top: 0.2rem;
+  margin-top: 0.7rem;
   border-radius: 0.35rem;
 }
 .item > span {

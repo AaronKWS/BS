@@ -36,16 +36,19 @@ import { mapState, mapMutations } from 'vuex'
 export default {
   data() {
     return {
-      show: false
+      show: false,
+      timer: null
     }
   },
   created() {
     let self = this
+    console.log(this.users)
+    console.log(this.timer)
     if (this.users === null) {
       this.show = false
     } else {
       this.show = true
-      window.setInterval(function() {
+      this.timer = setInterval(function() {
         self.$axios
           .post('/login', {
             name: self.users.username,
@@ -66,11 +69,17 @@ export default {
     exitApp: function() {
       this.exitUser()
       this.show = false
+      clearInterval(this.timer)
+      this.timer = null
     },
     ...mapMutations(['setUser', 'exitUser'])
   },
   computed: {
     ...mapState(['users'])
+  },
+  beforeDestroy() {
+    clearInterval(this.timer)
+    this.timer = null
   }
 }
 </script>

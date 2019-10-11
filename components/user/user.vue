@@ -1,6 +1,8 @@
 <template>
     <div>
-        <component :is="tagName" @goUserPage="goUserPage"></component>
+        <keep-alive>
+            <component :is="tagName" @goUserPage="goUserPage"></component>
+        </keep-alive>
     </div>
 </template>
 
